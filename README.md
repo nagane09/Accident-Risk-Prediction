@@ -1,121 +1,105 @@
-# Accident Risk Prediction
+# 🔮 Power Consumption Prediction
 
-A Machine Learning project that predicts the **risk of road accidents** using historical accident data and statistical learning models.
-
-Road accidents cause millions of injuries and deaths every year, and predicting where accidents are most likely to occur — or how severe they might be — can help governments, drivers, and planners improve **road safety and decision-making**.
+This project predicts power consumption (kW) using machine learning and provides a real-time interface through a Flask web application.
 
 ---
 
-## 🚀 Project Overview
+## 🌐 Flask Web Application
 
-This project uses historical accident data to build a supervised machine learning model that estimates the **risk of an accident** (or severity, depending on the dataset) based on relevant features such as traffic conditions, weather, location, time, and other factors.
+- **Deployed using Flask** for real-time predictions.
+- **User interface**: HTML form for inputting data.
+- **Backend**: Validates input and handles errors.
+- **Output**: Displays predicted power consumption instantly.
 
-👉 Users can upload a dataset or use a test dataset to run the model and get prediction
+---
+
+## 🧩 App Features
+
+- HTML form for user input
+- Backend validation & error handling
+- Instant prediction of power consumption
+
+---
+
+## 🧪 Flask Route Logic
+
+**GET**: Renders the input form  
+**POST**:
+1. Collects user inputs
+2. Converts inputs to numerical format
+3. Predicts power consumption using the trained model
+4. Returns the predicted value
 
 
 ---
 
-## 🧠 What This Project Does
+## 🧠 Mathematical Intuition (High-Level)
 
-This project performs:
+The final model (`XGBRegressor`) works by:
 
-1. **Exploratory Data Analysis (EDA)**  
-   * Understands patterns in accident data  
-   * Visualizes key features (location, time, severity, etc.)
+1. Training multiple decision trees on random subsets of data.
+2. Averaging predictions to reduce variance.
 
-2. **Data Preprocessing**
-   * Cleans missing values
-   * Encodes categorical variables
-   * Scales numerical features
+\[
+\hat{y} = \frac{1}{N} \sum_{i=1}^{N} f_i(x)
+\]
 
-3. **Machine Learning Model Training**
-   * Fits models such as Random Forest, Logistic Regression, XGBoost, etc.
-   * Evaluates accuracy and performance
+Where:  
+- \(f_i(x)\) is the prediction from the \(i\)-th tree  
+- \(N\) is the number of trees  
 
-4. **Prediction**
-   * Takes new input data
-   * Generates accident risk scores or risk labels
-
-5. **Output**
-   * Saves results to `submission.csv`  
-   * Can be used to visualize high-risk areas
+This approach reduces overfitting compared to a single decision tree.
 
 ---
 
-## 🧪 Datasets
+## 🚀 Future Improvements
 
-The repository includes:
-
-* **submission_data.csv** – Raw dataset used for model prediction
-* **submission.csv** – Resulting predictions
-
-Place additional datasets in the `data/` folder if needed.
-
----
-
-## 📦 Requirements
-
-Install required libraries:
-
-```bash
-pip install -r requirements.txt
-```
-
-## 📈 Model Results & Performance
-
-The **Gradient Boosting Regressor** was trained and evaluated to predict accident risk.  
-The model shows strong performance on both training and validation datasets.
+- Hyperparameter tuning with `GridSearchCV`
+- Time-series specific models (LSTM, Prophet)
+- Feature importance visualization
+- Docker-based deployment
+- REST API integration
 
 ---
 
-### 🔹 Training Performance (Gradient Boosting)
+## 🛠️ Tech Stack
 
-- **Mean Squared Error (MSE):** 0.0032  
-- **Root Mean Squared Error (RMSE):** 0.0569  
-- **Mean Absolute Error (MAE):** 0.0443  
-- **R² Score:** 0.8833  
-
----
-
-### 🔹 Validation Performance
-
-- **Mean Squared Error (MSE):** 0.0032  
-- **Root Mean Squared Error (RMSE):** 0.0570  
-- **Mean Absolute Error (MAE):** 0.0444  
-- **R² Score:** 0.8824  
+- Python
+- Pandas, NumPy
+- Scikit-learn
+- XGBoost
+- Flask
+- Joblib
+- HTML/CSS
 
 ---
 
-### 📌 Interpretation
+## 📊 Model Training (High-Level Overview)
 
-- The high **R² score (~0.88)** indicates that the model explains most of the variance in accident risk.
-- Very similar training and validation metrics confirm **good generalization**.
-- Low error values suggest accurate and stable predictions.
+- **Data preprocessing**:
+  - Categorical features → OneHotEncoding
+  - Numerical features → StandardScaler
+- **Models tested**: Gradient Boosting, XGBoost, Random Forest, etc.
+- **Evaluation metrics**: MSE, RMSE, MAE, R²
+- **Final model**: `XGBRegressor` with tuned hyperparameters
 
----
+```python
+from xgboost import XGBRegressor
 
-## 🛠 Technologies Used
+xgb_model = XGBRegressor(
+    n_estimators=1000,
+    learning_rate=0.03,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    tree_method="hist",
+    random_state=42
+)
+xgb_model.fit(X_train_processed, y_train)
+````
 
-- **Python** – Core programming language  
-- **Pandas & NumPy** – Data manipulation and numerical computing  
-- **scikit-learn** – Machine learning models and evaluation  
-- **Jupyter Notebook** – Interactive analysis and experimentation  
-- **CSV Files** – Dataset storage and prediction results  
-
----
-
-## 📊 Example Use Cases
-
-This system can be applied in real-world scenarios such as:
-
-- **Government Agencies**  
-  Identify and map accident-prone zones to improve road safety.
-
-- **Insurance Companies**  
-  Assess accident risk for policy pricing and claims analysis.
-
-- **Traffic & Urban Planners**  
-  Prioritize infrastructure improvements based on risk prediction.
-
-- **Data Scientists & Researchers**  
-  Experiment with predictive modeling and safety analytics.
+-Validation results:
+-MSE: 0.00317
+-MAE: 0.0437
+-R²: 0.8852
+-Model and preprocessor saved using joblib:
